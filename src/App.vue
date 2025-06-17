@@ -49,8 +49,8 @@
         </div>
         <div class="control-card">
   <h2 class="card-title">Dashboard</h2>
-  <button @click="saveDashboard">💾 Save Dashboard</button>
-  <button @click="loadDashboard">🔁 Load Dashboard</button>
+  <button class="save-dashboard" @click="saveDashboard">💾 Save Dashboard</button>
+  <button class="load-dashboard" @click="loadDashboard">🔁 Load Dashboard</button>
 </div>
 
         <!-- Chart Layout -->
@@ -855,6 +855,47 @@ resizeItem(event) {
   background-color: #276749;
 }
 
+.save-dashboard {
+  background-color: #38a169;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.08);
+  transition: background-color 0.2s;
+  margin-top: 12px;
+}
+
+.app-container.dark .save-dashboard{
+   background-color: #38b2ac;
+}
+
+.save-dashboard :hover {
+  background-color: #276749;
+}
+
+.load-dashboard {
+  background-color: #38a169;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.08);
+  transition: background-color 0.2s;
+  margin-top: 12px;
+}
+.app-container.dark .load-dashboard{
+   background-color: #38b2ac;
+}
+.load-dashboard :hover {
+  background-color: #276749;
+}
 .side-by-side-container {
   display: flex;
   gap: 20px;
