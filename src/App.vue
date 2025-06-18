@@ -179,7 +179,7 @@ data() {
     lastSafeWidth: 300,
     lastSafeHeight: 600,
 
-    // 🧩 Drop zones with move support
+    // Drop zones with move support
     zones: [
   {
     droppedOptions: [],
@@ -203,7 +203,7 @@ data() {
     
     //showSecondZone: false,
  
-    // 🖱️ Zone moving
+    //  Zone moving
     draggingZoneIndex: null,
     dragOffsetX: 0,
     dragOffsetY: 0,
@@ -214,7 +214,10 @@ data() {
     startX: 0,
     startY: 0,
     startWidth: 0,
-    startHeight: 0
+    startHeight: 0,
+
+    // Store dashboard Json
+    saveDashboardJson: ''
 
     
   };
@@ -237,12 +240,23 @@ computed: {
       left: zone.left || 0,
       chartType: zone.chartType || 'bar',
       timeInterval: zone.timeInterval || 'daywise',
-      chartData: zone.chartData || null // Save chart data
+      chartData: zone.chartData || null 
     })),
     chartLayout: this.chartLayout,
     isDarkMode: this.isDarkMode
   };
-  localStorage.setItem('savedDashboard', JSON.stringify(state));
+
+  const jsonState = JSON.stringify(state);
+
+  localStorage.setItem('savedDashboard', jsonState);
+
+  this.saveDashboardJson= jsonState;
+
+   console.log('Saved Dashboard as JSON string:', jsonState);
+
+ // console.log(' Saved Dashboard Object:', state);
+  console.log('Saved Dashboard JSON String:', this.savedDashboardJson);
+
   alert('Dashboard saved successfully!');
 },
 
@@ -292,9 +306,8 @@ addDropZone() {
   const zoneHeight = 300;
   const padding = 20;
 
-  const containerHeight = window.innerHeight - 100; // Adjust if you have a header/footer
+  const containerHeight = window.innerHeight - 100; 
 
-  // Try filling vertically first
   let found = false;
   let newTop = 0;
   let newLeft = 0;
@@ -377,7 +390,7 @@ onZoneDrag(event) {
   newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - zoneWidth));
   newTop = Math.max(0, Math.min(newTop, containerRect.height - zoneHeight));
 
-  // Optional: prevent overlapping with other zones
+
   if (!this.willOverlap(newLeft, newTop, this.draggingZoneIndex)) {
     this.$set(zone, 'left', newLeft);
     this.$set(zone, 'top', newTop);
