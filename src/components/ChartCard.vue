@@ -116,46 +116,64 @@ export default {
     updateChart() {
       if (this.droppedOptions.length) this.renderChart();
     },
-    getChartData() {
-      if(this.savedData){
-        return this.savedData;
-      }
-      const labels =
-        this.timeInterval === 'daywise'
-          ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
-          : ['00:00', '06:00', '12:00', '18:00', '23:59'];
+getChartData() {
+  if (this.savedData) {
+    return this.savedData;
+  }
 
-      const colors =
-        this.droppedColors.length > 0
-          ? this.droppedColors
-          : ['#34d399', '#60a5fa', '#fbbf24', '#f87171', '#a78bfa'];
+  const labels =
+    this.timeInterval === 'daywise'
+      ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+      : ['00:00', '06:00', '12:00', '18:00', '23:59'];
 
-      if (this.chartType === 'pie') {
-   
-        const pieData = labels.map(() => Math.floor(Math.random() * 50));
-        return {
-          labels,
-          datasets: [{
-            label: 'Pie Chart',
-            data: pieData,
-            backgroundColor: colors.slice(0, labels.length),
-            borderWidth: 1
-          }]
-        };
-      }
+  const colors =
+    this.droppedColors.length > 0
+      ? this.droppedColors
+      : ['#34d399', '#60a5fa', '#fbbf24', '#f87171', '#a78bfa'];
 
-      return {
-        labels,
-        datasets: this.droppedOptions.map((opt, i) => ({
-          label: opt,
-          data: labels.map(() => Math.floor(Math.random() * 50)),
-          backgroundColor: colors[i % colors.length],
-          borderColor: colors[i % colors.length],
-          borderWidth: 1,
-          fill: this.chartType !== 'line'
-        }))
-      };
-    }
+  // Static dataset per option
+  const staticDataMap = {
+    'Total Call Initiated': [10, 20, 50, 40, 30],
+    'Call Dailed Out': [15, 25, 35, 25, 55],
+    'Answered Calls': [12, 42, 32, 42, 52],
+    'Unanswered Calls': [8, 18, 28, 38, 48],
+    'Failed Calls': [5, 15, 25, 35, 45],
+    'Dropped Calls': [7, 17, 27, 37, 47],
+    'Busy Calls': [11, 21, 31, 41, 51],
+    'No Answers': [6, 16, 26, 36, 46],
+    'Invalid Number': [9, 19, 29, 39, 49]
+  };
+
+  if (this.chartType === 'pie') {
+    // For pie, show values for dropped options as slices
+    const data = this.droppedOptions.map(opt => {
+      return staticDataMap[opt]?.[0] || 0; // Use first value or 0
+    });
+
+    return {
+      labels: this.droppedOptions,
+      datasets: [{
+        label: 'Pie Chart',
+        data,
+        backgroundColor: colors.slice(0, this.droppedOptions.length),
+        borderWidth: 1
+      }]
+    };
+  }
+
+  // For bar/line: one dataset per option
+  return {
+    labels,
+    datasets: this.droppedOptions.map((opt, i) => ({
+      label: opt,
+      data: staticDataMap[opt] || [0, 0, 0, 0, 0],
+      backgroundColor: colors[i % colors.length],
+      borderColor: colors[i % colors.length],
+      borderWidth: 1,
+      fill: this.chartType !== 'line'
+    }))
+  };
+}
   }
 };
 </script>
