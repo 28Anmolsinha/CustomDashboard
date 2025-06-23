@@ -136,18 +136,18 @@ getChartData() {
     'Total Call Initiated': [10, 20, 50, 40, 30],
     'Call Dailed Out': [15, 25, 35, 25, 55],
     'Answered Calls': [12, 42, 32, 42, 52],
-    'Unanswered Calls': [8, 18, 28, 38, 48],
-    'Failed Calls': [5, 15, 25, 35, 45],
-    'Dropped Calls': [7, 17, 27, 37, 47],
-    'Busy Calls': [11, 21, 31, 41, 51],
-    'No Answers': [6, 16, 26, 36, 46],
-    'Invalid Number': [9, 19, 29, 39, 49]
+    'Unanswered Calls': [8, 48, 18, 38, 28],
+    'Failed Calls': [5, 25, 45, 35, 25],
+    'Dropped Calls': [7, 17, 27, 17, 47],
+    'Busy Calls': [11, 21, 31, 21, 51],
+    'No Answers': [6, 36, 26, 36, 46],
+    'Invalid Number': [9, 19, 29, 49, 19]
   };
 
   if (this.chartType === 'pie') {
-    // For pie, show values for dropped options as slices
+   
     const data = this.droppedOptions.map(opt => {
-      return staticDataMap[opt]?.[0] || 0; // Use first value or 0
+      return staticDataMap[opt]?.[0] || 0; 
     });
 
     return {
@@ -161,7 +161,7 @@ getChartData() {
     };
   }
 
-  // For bar/line: one dataset per option
+
   return {
     labels,
     datasets: this.droppedOptions.map((opt, i) => ({
