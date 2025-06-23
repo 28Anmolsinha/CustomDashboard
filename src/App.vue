@@ -228,62 +228,55 @@ computed: {
   }
 },
   methods: {
-   saveDashboard() {
+  saveDashboard() {
   const state = {
     zones: this.zones.map(zone => ({
-      droppedOptions: zone.droppedOptions || [],
-      droppedColors: zone.droppedColors || [],
-      itemWidths: zone.itemWidths || [],
-      itemHeights: zone.itemHeights || [],
+      chartData: zone.chartData || null,
       showGraph: zone.showGraph || false,
       top: zone.top || 0,
       left: zone.left || 0,
       chartType: zone.chartType || 'bar',
-      timeInterval: zone.timeInterval || 'daywise',
-      chartData: zone.chartData || null 
+      timeInterval: zone.timeInterval || 'daywise'
     })),
     chartLayout: this.chartLayout,
     isDarkMode: this.isDarkMode
   };
 
   const jsonState = JSON.stringify(state);
-
   localStorage.setItem('savedDashboard', jsonState);
+  this.saveDashboardJson = jsonState;
 
-  this.saveDashboardJson= jsonState;
-
-   console.log('Saved Dashboard as JSON string:', jsonState);
-
- // console.log(' Saved Dashboard Object:', state);
-  console.log('Saved Dashboard JSON String:', this.savedDashboardJson);
-
+  console.log('Saved Dashboard as JSON string:', jsonState);
   alert('Dashboard saved successfully!');
-},
+}
+,
 
 loadDashboard() {
   const saved = localStorage.getItem('savedDashboard');
   if (saved) {
     try {
       const state = JSON.parse(saved);
-      
-   
       this.zones = [];
+
       state.zones.forEach((zone) => {
+        const datasets = zone.chartData?.datasets || [];
+
         this.zones.push({
-          droppedOptions: zone.droppedOptions || [],
-          droppedColors: zone.droppedColors || [],
-          itemWidths: zone.itemWidths || [],
-          itemHeights: zone.itemHeights || [],
+          chartData: zone.chartData || null,
           showGraph: zone.showGraph || false,
           top: zone.top || 0,
           left: zone.left || 0,
           chartType: zone.chartType || 'bar',
           timeInterval: zone.timeInterval || 'daywise',
-          chartData: zone.chartData || null
+
+          // Reconstruct derived properties
+          droppedOptions: datasets.map(ds => ds.label),
+          droppedColors: datasets.map(ds => ds.backgroundColor),
+          itemWidths: datasets.map(() => 80),     // or use stored default if dynamic
+          itemHeights: datasets.map(() => 35)
         });
       });
 
-      // Restore chart layout and dark mode
       this.chartLayout = state.chartLayout || 'full';
       this.isDarkMode = state.isDarkMode ?? false;
 
@@ -294,7 +287,8 @@ loadDashboard() {
   } else {
     alert('No saved dashboard found.');
   }
-},
+}
+,
     confirmDeleteZone(zoneIndex) {
   const confirmed = window.confirm("Do you really want to delete this drop zone?");
   if (confirmed) {
