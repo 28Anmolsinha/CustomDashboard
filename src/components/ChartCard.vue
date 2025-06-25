@@ -131,7 +131,7 @@ getChartData() {
       ? this.droppedColors
       : ['#34d399', '#60a5fa', '#fbbf24', '#f87171', '#a78bfa'];
 
-  // Static dataset per option
+
   const staticDataMap = {
     'Total Call Initiated': [10, 20, 50, 40, 30],
     'Call Dailed Out': [15, 25, 35, 25, 55],
@@ -141,7 +141,22 @@ getChartData() {
     'Dropped Calls': [7, 17, 27, 17, 47],
     'Busy Calls': [11, 21, 31, 21, 51],
     'No Answers': [6, 36, 26, 36, 46],
-    'Invalid Number': [9, 19, 29, 49, 19]
+    'Invalid Number': [9, 19, 29, 49, 19],
+    'Answer Rate (%)': [75, 79, 76, 90, 86],
+    'Connection Rate (%)': [2, 83, 81, 90, 86],
+    'Success Rate (%)': [70, 75, 72, 85, 80],
+    'Failure Rate (%)': [30, 25, 28, 15, 20],
+    'Average Call Duration': [120, 150, 180, 200, 160],
+    'Average Hold Time': [20, 25, 30, 35, 25],
+    'Average Time to Connect': [5, 6, 7, 8, 6],
+    'Campaign Executed': [10, 20, 50, 40, 30],
+    'Campaign Reached': [15, 25, 35, 25, 55],
+    'DND (%)': [12, 42, 32, 42, 52],
+    'DTMF Inputs Captured': [8, 48, 18, 38, 28],
+    'DTMF Input Distribution': [5, 25, 45, 35, 25],
+    'Follow-up Action Rate': [7, 17, 27, 17, 47],
+    'Retry Attempts': [7, 17, 27, 17, 47],
+    'CLI Quality': [11, 21, 31, 21, 51],
   };
 
   if (this.chartType === 'pie') {
