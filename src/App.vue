@@ -1,4 +1,3 @@
-
 <template>
   <div :class="['app-container', { dark: isDarkMode }]">
     <!-- LEFT: Drawer -->
@@ -12,21 +11,106 @@
         </button>
 
         <!-- Draggable Options -->
-        <div class="control-card">
-          <h2 class="card-title">Options</h2>
-          <ul class="options-list-vertical">
-            <li
-              v-for="(option, idx) in options"
-              :key="idx"
-              class="option-card"
-              :style="{ backgroundColor: optionColorMap[option], color: isDarkMode ? '#fff' : '#000' }"
-              draggable="true"
-              @dragstart="onDragStart(option, $event)"
-            >
-              {{ option }}
-            </li>
-          </ul>
-        </div>
+      <!-- Draggable Options -->
+<div class="control-card">
+  <h2 class="card-title">Options</h2>
+  
+  <!-- Call Metrics Dropdown -->
+  <div class="widget-dropdown-container" style="margin-bottom: 10px;">
+    <button class="dropdown-toggle" @click="showCallOptions = !showCallOptions">
+      Call Metrics 
+      <span class="dropdown-icon" :class="{ rotated: showCallOptions }">▼</span>
+    </button>
+    <transition name="fade">
+      <div v-if="showCallOptions" class="dropdown-options-container">
+        <ul class="options-list-vertical">
+          <li
+            v-for="(option, idx) in callOptions"
+            :key="'call-'+idx"
+            class="option-card"
+            :style="{ backgroundColor: optionColorMap[option], color: isDarkMode ? '#fff' : '#000' }"
+            draggable="true"
+            @dragstart="onDragStart(option, $event)"
+          >
+            {{ option }}
+          </li>
+        </ul>
+      </div>
+    </transition>
+  </div>
+
+  <!-- Performance Metrics Dropdown -->
+  <div class="widget-dropdown-container">
+    <button class="dropdown-toggle" @click="showPerfOptions = !showPerfOptions">
+      Performance Metrics 
+     <span class="dropdown-icon" :class="{ rotated: showPerfOptions }">▼</span>
+    </button>
+    <transition name="fade">
+      <div v-if="showPerfOptions" class="dropdown-options-container">
+        <ul class="options-list-vertical">
+          <li
+            v-for="(option, idx) in perfOptions"
+            :key="'perf-'+idx"
+            class="option-card"
+            :style="{ backgroundColor: optionColorMap[option], color: isDarkMode ? '#fff' : '#000' }"
+            draggable="true"
+            @dragstart="onDragStart(option, $event)"
+          >
+            {{ option }}
+          </li>
+        </ul>
+      </div>
+    </transition>
+  </div>
+
+  <!-- Campaign Metrics Dropdown -->
+  <div class="widget-dropdown-container">
+    <button class="dropdown-toggle" @click="showcampaign = !showcampaign">
+      Campaign Metrics 
+          <span class="dropdown-icon" :class="{ rotated: showcampaign }">▼</span>
+    </button>
+    <transition name="fade">
+      <div v-if="showcampaign" class="dropdown-options-container">
+        <ul class="options-list-vertical">
+          <li
+            v-for="(option, idx) in campaignOptions"
+            :key="'perf-'+idx"
+            class="option-card"
+            :style="{ backgroundColor: optionColorMap[option], color: isDarkMode ? '#fff' : '#000' }"
+            draggable="true"
+            @dragstart="onDragStart(option, $event)"
+          >
+            {{ option }}
+          </li>
+        </ul>
+      </div>
+    </transition>
+  </div>
+
+    <!-- Quality Metrics Dropdown -->
+  <div class="widget-dropdown-container">
+    <button class="dropdown-toggle" @click="qualitymetrices = !qualitymetrices">
+      Quality Metrics 
+         <span class="dropdown-icon" :class="{ rotated: qualitymetrices }">▼</span>
+    </button>
+    <transition name="fade">
+      <div v-if="qualitymetrices" class="dropdown-options-container">
+        <ul class="options-list-vertical">
+          <li
+            v-for="(option, idx) in qualityOptions"
+            :key="'perf-'+idx"
+            class="option-card"
+            :style="{ backgroundColor: optionColorMap[option], color: isDarkMode ? '#fff' : '#000' }"
+            draggable="true"
+            @dragstart="onDragStart(option, $event)"
+          >
+            {{ option }}
+          </li>
+        </ul>
+      </div>
+    </transition>
+  </div>
+</div>
 
         <!-- Button -->
         <div class="control-card">
@@ -52,13 +136,6 @@
   <button class="save-dashboard" @click="saveDashboard">💾 Save Dashboard</button>
   <button class="load-dashboard" @click="loadDashboard">🔁 Load Dashboard</button>
 </div>
-
-        <!-- Chart Layout -->
-        <div class="control-card">
-          <h2 class="card-title">Chart Layout</h2>
-          <label><input type="radio" value="full" v-model="chartLayout" /> Full Width</label>
-          <label><input type="radio" value="half" v-model="chartLayout" /> Side by Side</label>
-        </div>
       </div>
     </div>
 
@@ -150,60 +227,117 @@ export default {
   components: { ChartCard },
 data() {
   return {
-    // Static options
-    options: ['Total Call Initiated', 'Call Dailed Out', 'Answered Calls', 'Unanswered Calls','Failed Calls','Dropped Calls', 'Busy Calls','No Answers','Invalid Number'],
-  optionColorMap: {
-  'Total Call Initiated': '#34d399',
-  'Call Dailed Out': '#60a5fa',
-  'Answered Calls': '#fbbf24',
-  'Unanswered Calls': '#f87171',
-  'Failed Calls': '#c084fc',          
-  'Dropped Calls': '#f472b6',         
-  'Busy Calls': '#fb923c',            
-  'No Answers': '#818cf8',            
-  'Invalid Number': '#A52A2A'         
+    showCallOptions: false,
+    showPerfOptions: false,
+    showcampaign: false,
+    qualitymetrices:false,
+
+    callOptions: [
+      'Total Call Initiated', 
+      'Call Dailed Out', 
+      'Answered Calls',
+      'Unanswered Calls',
+      'Failed Calls',
+      'Dropped Calls',
+      'Busy Calls',
+      'No Answers',
+      'Invalid Number'
+    ],
+    perfOptions: [
+      'Answer Rate (%)',
+      'Connection Rate (%)',
+      'Success Rate (%)',
+      'Failure Rate (%)',
+      'Average Call Duration',
+      'Average Hold Time',
+      'Average Time to Connect'
+    ],
+    campaignOptions: [
+      'Campaign Executed',
+      'Campaign Reached',
+      'DND (%)',
+      'DTMF Inputs Captured',
+      'DTMF Input Distribution',
+      'Follow-up Action Rate'
+    ],
+    qualityOptions:[
+      'Retry Attempts',
+      'CLI Quality'
+    ],
+
+    // Combined color map for all options
+   optionColorMap: {
+  // Call Metrics Colors
+  'Total Call Initiated': '#16a34a',     
+  'Call Dailed Out': '#2563eb',         
+  'Answered Calls': '#facc15',           
+  'Unanswered Calls': '#ef4444',         
+  'Failed Calls': '#a855f7',             
+  'Dropped Calls': '#ec4899',            
+  'Busy Calls': '#f97316',               
+  'No Answers': '#6366f1',               
+  'Invalid Number': '#7c3aed',           
+
+  // Performance Metrics Colors
+  'Answer Rate (%)': '#10b981',        
+  'Connection Rate (%)': '#3b82f6',      
+  'Success Rate (%)': '#8b5cf6',         
+  'Failure Rate (%)': '#e11d48',         
+  'Average Call Duration': '#fbbf24',    
+  'Average Hold Time': '#f97316',        
+  'Average Time to Connect': '#06b6d4',  
+
+  // Campaign Metrics Colors
+  'Campaign Executed': '#22c55e',    
+  'Campaign Reached': '#0ea5e9',       
+  'DND (%)': '#dc2626',                 
+  'DTMF Inputs Captured': '#eab308',   
+  'DTMF Input Distribution': '#ea580c',  
+  'Follow-up Action Rate': '#9333ea',    
+
+  // Quality Metrics Colors
+  'Retry Attempts': '#be123c',          
+  'CLI Quality': '#7c3aed'               
 },
 
-
-    // Chart controls
+    // Chart controls 
     timeInterval: 'daywise',
     chartType: 'bar',
     chartLayout: 'full',
 
-    // UI controls
+    // UI controls 
     draggedOption: null,
     isDrawerOpen: false,
     isDarkMode: false,
 
-    // Default sizes for resizable items
+    // Default sizes for resizable items 
     lastSafeWidth: 300,
     lastSafeHeight: 600,
 
-    // Drop zones with move support
+    // Drop zones with move support 
     zones: [
-  {
-    droppedOptions: [],
-    droppedColors: [],
-    itemWidths: [],
-    itemHeights: [],
-    showGraph: false,
-    top: 100,
-    left: 100,
-    chartType: 'bar',
-    timeInterval: 'daywise'
-  }
-],availableSlots: [
-  { top: 20, left: 20 },
-  { top: 20, left: 590 },
-  { top: 20, left: 1160 },
-  { top: 220, left: 20 },
-  { top: 220, left: 590 },
-  { top: 220, left: 1160 }
-],
+      {
+        droppedOptions: [],
+        droppedColors: [],
+        itemWidths: [],
+        itemHeights: [],
+        showGraph: false,
+        top: 100,
+        left: 100,
+        chartType: 'bar',
+        timeInterval: 'daywise'
+      }
+    ],
+    availableSlots: [
+      { top: 20, left: 20 },
+      { top: 20, left: 590 },
+      { top: 20, left: 1160 },
+      { top: 220, left: 20 },
+      { top: 220, left: 590 },
+      { top: 220, left: 1160 }
+    ],
     
-    //showSecondZone: false,
- 
-    //  Zone moving
+    // Zone moving 
     draggingZoneIndex: null,
     dragOffsetX: 0,
     dragOffsetY: 0,
@@ -216,10 +350,8 @@ data() {
     startWidth: 0,
     startHeight: 0,
 
-    // Store dashboard Json
+    // Store dashboard Json 
     saveDashboardJson: ''
-
-    
   };
 },
 computed: {
@@ -269,10 +401,10 @@ loadDashboard() {
           chartType: zone.chartType || 'bar',
           timeInterval: zone.timeInterval || 'daywise',
 
-          // Reconstruct derived properties
+       
           droppedOptions: datasets.map(ds => ds.label),
           droppedColors: datasets.map(ds => ds.backgroundColor),
-          itemWidths: datasets.map(() => 80),     // or use stored default if dynamic
+          itemWidths: datasets.map(() => 80),     
           itemHeights: datasets.map(() => 35)
         });
       });
@@ -520,31 +652,100 @@ resizeItem(event) {
 </script>
 
 <style scoped>
-/* .add-zone-btn {
-  margin-top: 10px;
-  padding: 8px;
-  background-color: #4f46e5;
+/* Dropdown styles */
+.dropdown-icon {
+  transition: transform 0.2s ease;
+  font-size: 0.8em;
+  margin-left: 8px;
+}
+
+.dropdown-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.dropdown-toggle {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: #38a169;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-} */
-.add-zone-btn:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
-.close-drawer-btn {
-  background-color: transparent;
-  color: inherit;
-  font-size: 18px;
-  border: none;
-  cursor: pointer;
-  margin-bottom: 10px;
-  align-self: flex-end;
+  text-align: left;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 8px;
 }
 
-.add-zone-btn {
+.dropdown-toggle:hover {
+  background-color: #2f855a;
+  transform: translateY(-1px);
+}
 
+.dropdown-toggle[aria-expanded="true"] .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.dropdown-options-container {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin-top: 4px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+  position: relative;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.option-card {
+  padding: 10px 16px;
+  margin: 4px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: grab;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  background-color: #9ae6b4; 
+  text-align: center;
+}
+
+.option-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.option-card:active {
+  cursor: grabbing;
+}
+
+.widget-dropdown-container {
+  margin-bottom: 16px;
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.options-list-vertical {
+  margin: 0;
+  padding: 5px 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Button styles */
+.add-zone-btn, .show-graph-btn, .save-dashboard, .load-dashboard {
   background-color: #38a169;
   color: #fff;
   border: none;
@@ -557,6 +758,27 @@ resizeItem(event) {
   transition: background-color 0.2s;
   margin-top: 12px;
 }
+
+.add-zone-btn:hover, .show-graph-btn:hover, 
+.save-dashboard:hover, .load-dashboard:hover {
+  background-color: #276749;
+}
+
+.add-zone-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.close-drawer-btn {
+  background-color: transparent;
+  color: inherit;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+  align-self: flex-end;
+}
+
 .delete-zone-btn {
   position: absolute;
   top: 5px;
@@ -572,33 +794,6 @@ resizeItem(event) {
   z-index: 10;
 }
 
-
-.app-container.dark .add-zone-btn{
-   background-color: #38b2ac;
-}
-.add-zone-btn:hover {
-  background-color: #276749;
-}
-
-.resizable-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  box-sizing: border-box;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  position: relative;
-}
-.dropped-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  position: relative;
-}
 .dark-toggle {
   padding: 8px 16px;
   background-color: #2f855a;
@@ -612,16 +807,21 @@ resizeItem(event) {
   font-weight: 600;
   transition: background-color 0.3s ease;
 }
+
 .dark-toggle:hover {
   background-color: #276749;
 }
+
 .toggle-icon {
   font-size: 1.2rem;
   transition: transform 0.3s ease;
 }
+
 .dark-toggle:hover .toggle-icon {
   transform: rotate(20deg);
 }
+
+/* App container and layout styles */
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -630,19 +830,12 @@ resizeItem(event) {
   color: #1a202c;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 .app-container.dark {
   background-color: #1a202c;
   color: #edf2f7;
 }
-.dark-toggle {
-  padding: 6px 14px;
-  background-color: #2f855a;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  width: 100%;
-}
+
 .left-drawer {
   width: 40px;
   transition: width 0.3s ease;
@@ -650,19 +843,18 @@ resizeItem(event) {
   background-color: #c6f6d5;
   border-right: 2px solid #68d391;
 }
+
 .left-drawer.open {
   width: 280px;
 }
-.app-container.dark .left-drawer {
-  background-color: #2d3748;
-  border-color: #4fd1c5;
-}
+
 .drawer-content {
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
+
 .right-content {
   flex: 1;
   padding: 24px;
@@ -670,42 +862,39 @@ resizeItem(event) {
   height: 400px;
 }
 
+/* Card styles */
 .control-card {
   background-color: #d9f0d9;
   border: 1px solid #68d391;
   border-radius: 8px;
   padding: 16px 24px;
+  position: relative;
+  overflow: visible;
 }
-.app-container.dark .control-card {
-  background-color: #2a4365;
-  border-color: #4fd1c5;
-}
+
 .card-title {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #276749;
+  color: #2d3748;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
 }
-.app-container.dark .card-title {
-  color: #9ae6b4;
-}
+
 .control-card label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
   color: #276749;
 }
-.app-container.dark .control-card label {
-  color: #9ae6b4;
-}
+
 .control-card input[type='radio'] {
   margin-right: 8px;
 }
 
+/* Original Drop Zone styles */
 .drag-drop-zone {
-  margin: 0;
   width: 100%;
-  max-width: 100%;
   min-height: 250px;
   border: 2px dashed #68d391;
   border-radius: 8px;
@@ -713,11 +902,9 @@ resizeItem(event) {
   position: relative;
   padding: 16px;
   box-sizing: border-box;
+  margin: 0;
 }
-.app-container.dark .drag-drop-zone {
-  border-color: #4fd1c5;
-  background-color: #2d3748;
-}
+
 .drop-placeholder {
   color: #276749;
   font-size: 1rem;
@@ -726,60 +913,20 @@ resizeItem(event) {
   padding: 80px 0;
   opacity: 0.7;
 }
-.app-container.dark .drop-placeholder {
-  color: #9ae6b4;
-}
-
-.options-list-vertical {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.option-card {
-  background-color: #9ae6b4; 
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-weight: 600;
-  text-align: center;
-  cursor: grab;
-  transition: transform 0.2s;
-}
-.option-card:hover {
-  transform: translateY(-2px);
-}
-.app-container.dark .option-card {
-  background-color: #38b2ac;
-  color: #fff;
-}
 
 .dropped-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
   display: flex;
   gap: 10px;
-  list-style: none;
-  padding: 0;
   flex-wrap: wrap;
-  position: relative;
-}
-.dropped-list li {
-  background-color: #68d391;
-  border-radius: 6px;
-  font-weight: 500;
-  color: #f0fff4;
-  position: relative;
-  user-select: none;
-  box-sizing: border-box;
-}
-.app-container.dark .dropped-list li {
-  background-color: #4fd1c5;
-  color: #1a202c;
 }
 
 .resizable-item {
   position: relative;
-  padding: 6px 28px 6px 10px; /* leave space for ✖ */
+  padding: 6px 28px 6px 10px;
   box-sizing: border-box;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -787,7 +934,12 @@ resizeItem(event) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  background-color: #68d391;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
 .resize-handle {
   width: 12px;
   height: 12px;
@@ -799,6 +951,7 @@ resizeItem(event) {
   cursor: se-resize;
   user-select: none;
 }
+
 .remove-btn {
   position: absolute;
   top: 4px;
@@ -814,10 +967,31 @@ resizeItem(event) {
   color: #fff;
   z-index: 2;
 }
+
 .movable-first {
   z-index: 10;
   cursor: move;
 }
+
+/* Combined Zone styles */
+.combined-zone {
+  position: relative;
+  resize: both;
+  overflow: auto;
+  min-width: 300px;
+  min-height: 300px;
+  border: 2px dashed #68d391;
+  border-radius: 8px;
+  background-color: #f0fff4;
+  padding: 16px;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 90vh;
+  cursor: move;
+  z-index: 10;
+}
+
+/* Chart container styles */
 .charts-container {
   display: flex;
   margin-top: 32px;
@@ -828,81 +1002,22 @@ resizeItem(event) {
   overflow-x: auto;
   box-sizing: border-box;
 }
+
 .charts-container.half-layout > * {
   width: 50%;
   box-sizing: border-box;
 }
+
 .charts-container.full-layout {
   flex-direction: column;
 }
+
 .charts-container.full-layout > * {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
-.show-graph-btn {
 
-  background-color: #38a169;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.08);
-  transition: background-color 0.2s;
-  margin-top: 12px;
-}
-
-.app-container.dark .show-graph-btn{
-   background-color: #38b2ac;
-}
-.show-graph-btn:hover {
-  background-color: #276749;
-}
-
-.save-dashboard {
-  background-color: #38a169;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.08);
-  transition: background-color 0.2s;
-  margin-top: 12px;
-}
-
-.app-container.dark .save-dashboard{
-   background-color: #38b2ac;
-}
-
-.save-dashboard :hover {
-  background-color: #276749;
-}
-
-.load-dashboard {
-  background-color: #38a169;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.08);
-  transition: background-color 0.2s;
-  margin-top: 12px;
-}
-.app-container.dark .load-dashboard{
-   background-color: #38b2ac;
-}
-.load-dashboard :hover {
-  background-color: #276749;
-}
 .side-by-side-container {
   display: flex;
   gap: 20px;
@@ -926,34 +1041,8 @@ resizeItem(event) {
   border-radius: 8px;
   padding: 16px;
   box-sizing: border-box;
-  overflow: hidden; 
-  display: flex;   
-
-}
-.app-container.dark .graph-box {
-  background-color: #2d3748;
-  border-color: #4fd1c5;
-}
-
-.combined-zone {
-  position: relative;
-  resize: both;
-  overflow: auto;
-  min-width: 300px;
-  min-height: 300px;
-  border: 2px dashed #68d391;
-  border-radius: 8px;
-  background-color: #f0fff4;
-  padding: 16px;
-  box-sizing: border-box;
-  max-width: 100%;
-  max-height: 90vh;
-  cursor: move;
-  z-index: 10;
-}
-.app-container.dark .combined-zone {
-  background-color: #2d3748;
-  border-color: #4fd1c5;
+  overflow: hidden;
+  display: flex;
 }
 
 .charts-wrapper {
@@ -972,5 +1061,70 @@ resizeItem(event) {
   color: white;
   cursor: pointer;
   z-index: 100;
+}
+
+/* Dark mode styles */
+.app-container.dark .dropdown-toggle {
+  background-color: #38b2ac;
+}
+
+.app-container.dark .dropdown-toggle:hover {
+  background-color: #2c7a7b;
+}
+
+.app-container.dark .dropdown-options-container {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+
+.app-container.dark .option-card {
+  background-color: #38b2ac;
+  color: #fff;
+}
+
+.app-container.dark .left-drawer {
+  background-color: #2d3748;
+  border-color: #4fd1c5;
+}
+
+.app-container.dark .control-card {
+  background-color: #2a4365;
+  border-color: #4fd1c5;
+}
+
+.app-container.dark .card-title {
+  color: #edf2f7;
+  border-bottom-color: #4a5568;
+}
+
+.app-container.dark .control-card label {
+  color: #9ae6b4;
+}
+
+.app-container.dark .drag-drop-zone,
+.app-container.dark .combined-zone {
+  border-color: #4fd1c5;
+  background-color: #2d3748;
+}
+
+.app-container.dark .drop-placeholder {
+  color: #9ae6b4;
+}
+
+.app-container.dark .dropped-list li {
+  background-color: #4fd1c5;
+  color: #1a202c;
+}
+
+.app-container.dark .graph-box {
+  background-color: #2d3748;
+  border-color: #4fd1c5;
+}
+
+.app-container.dark .add-zone-btn,
+.app-container.dark .show-graph-btn,
+.app-container.dark .save-dashboard,
+.app-container.dark .load-dashboard {
+  background-color: #38b2ac;
 }
 </style>
